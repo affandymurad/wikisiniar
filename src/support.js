@@ -67,7 +67,9 @@ export function isNaturalVoice(v) {
   if (BROWSER.id === "firefox") return true;
   if (/natural/i.test(v.name)) return true;
   if (BROWSER.id === "chrome") return /^Google\b/i.test(v.name);
-  if (BROWSER.id === "safari") return /\((Enhanced|Premium)\)|Siri/i.test(v.name);
+  if (BROWSER.id === "safari")
+    // Nama bisa tanpa "(Enhanced)"; voiceURI macOS berbentuk com.apple.voice.premium.en-US.Ava
+    return /\b(Enhanced|Premium|Siri)\b|\.(enhanced|premium)\./i.test(`${v.name} ${v.voiceURI}`);
   return false;
 }
 

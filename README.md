@@ -17,7 +17,7 @@ audio* (`getDisplayMedia` + `MediaRecorder`).
 > | --- | --- | --- |
 > | **Edge** | Suara neural `Microsoft … Online (Natural)` (bawaan, butuh internet) | Ya |
 > | **Chrome** | Suara jaringan `Google …` (butuh internet) | Ya |
-> | **Safari** | Suara **Enhanced/Premium** atau **Siri** (unduh di Pengaturan Sistem → Aksesibilitas → Konten Terucap → Suara Sistem → Kelola Suara) | Tidak |
+> | **Safari** | Suara **Enhanced/Premium** atau **Siri** (unduh di Pengaturan Sistem → Aksesibilitas → Read & Speak (Konten Terucap di macOS lama) → Suara Sistem → Kelola Suara) | Tidak |
 > | **Firefox** | Semua suara bawaan sistem operasi (kualitas bergantung pada OS) | Tidak |
 >
 > Di Chrome, Edge, dan Safari, suara lokal OS yang terdengar robotik

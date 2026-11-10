@@ -39,7 +39,7 @@ export const translations = {
       "**Chrome:** suara \"Google …\" butuh koneksi internet. Pastikan Anda online dan Chrome versi terbaru, lalu muat ulang.",
     gateDetected: "Browser terdeteksi",
     gateTipSafari:
-      "**Safari (Mac):** unduh suara \"Enhanced\" atau \"Premium\" di Pengaturan Sistem → Aksesibilitas → Konten Terucap → Suara Sistem → Kelola Suara, lalu muat ulang.",
+      "**Safari (Mac):** unduh suara \"Enhanced\" atau \"Premium\" di Pengaturan Sistem → Aksesibilitas → Read & Speak (Konten Terucap di macOS lama) → Suara Sistem → Kelola Suara, lalu muat ulang.",
     gateTipFirefox:
       "**Firefox:** memakai suara bawaan sistem operasi. Pasang paket suara bahasa yang Anda perlukan di pengaturan sistem (Windows: Waktu & bahasa → Ucapan), lalu muat ulang.",
     gateGetChrome: "Unduh Chrome",
@@ -195,7 +195,7 @@ export const translations = {
       "**Chrome:** \"Google …\" voices need an internet connection. Make sure you're online and on the latest Chrome, then reload.",
     gateDetected: "Detected browser",
     gateTipSafari:
-      "**Safari (Mac):** download \"Enhanced\" or \"Premium\" voices in System Settings → Accessibility → Spoken Content → System Voice → Manage Voices, then reload.",
+      "**Safari (Mac):** download \"Enhanced\" or \"Premium\" voices in System Settings → Accessibility → Read & Speak (Spoken Content on older macOS) → System Voice → Manage Voices, then reload.",
     gateTipFirefox:
       "**Firefox:** uses your operating system's voices. Install the voice pack for the language you need in system settings (Windows: Time & language → Speech), then reload.",
     gateGetChrome: "Get Chrome",

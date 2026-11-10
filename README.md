@@ -14,6 +14,9 @@ audio* (`getDisplayMedia` + `MediaRecorder`).
 > menyimpan** suara hanya bisa di **Google Chrome atau Microsoft Edge versi
 > desktop**.
 >
+> **Rekomendasi:** setelah beberapa kali percobaan, **Microsoft Edge versi desktop**
+> memberikan kualitas suara (TTS) terbaik dan juga mendukung merekam & menyimpan suara.
+>
 > | Browser | Suara yang ditampilkan | Simpan ke MP3 |
 > | --- | --- | --- |
 > | **Edge** | Suara neural `Microsoft … Online (Natural)` (bawaan, butuh internet) | Ya |

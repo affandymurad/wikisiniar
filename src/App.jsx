@@ -185,6 +185,7 @@ export default function App() {
   const [article, setArticle] = useState(null); // { lang, title }
   const [rate, setRate] = useState(1);
   const [status, setStatus] = useState(null); // { k, p, tone }
+  const [procPct, setProcPct] = useState(null); // 0..100 saat memproses rekaman, else null
   const [speaking, setSpeaking] = useState(false);
   const [previewing, setPreviewing] = useState(false);
   const [recording, setRecording] = useState(false);
@@ -310,6 +311,17 @@ export default function App() {
       clearTimeout(stopPoll);
     };
   }, [blockReason]);
+
+  /* ----- Cegah tab tertutup tak sengaja saat rekaman diproses ----- */
+  useEffect(() => {
+    if (procPct === null) return;
+    const warn = (e) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [procPct !== null]);
 
   /* ----- Bersihkan saat unmount ----- */
   useEffect(() => {
@@ -566,8 +578,12 @@ export default function App() {
       setRecording(false);
       if (parts.length) {
         say("stProcessing");
-        trimSilence(new Blob(parts, { type: mimeType || "audio/webm" })).then(
+        setProcPct(0);
+        trimSilence(new Blob(parts, { type: mimeType || "audio/webm" }), (f) =>
+          setProcPct(Math.round(f * 100))
+        ).then(
           ({ blob, silent }) => {
+            setProcPct(null);
             setNewAudioUrl(blob);
             if (silent || peak < 0.01) say("stSilent", null, "warn");
             else say("stReady", null, "ok");
@@ -659,6 +675,7 @@ export default function App() {
             <span>{t("chipNatural")}</span>
             <span>{t("chipSave")}</span>
           </div>
+          <p className="reco">{rich(t("recoEdge"))}</p>
         </section>
 
         {gateReason && (
@@ -891,7 +908,24 @@ export default function App() {
               aria-live="polite"
             >
               {recording && <span className="rec-dot" aria-hidden="true" />}
-              {status ? t(status.k, status.p) : ""}
+              {procPct !== null && <span className="spinner" aria-hidden="true" />}
+              <div className="status-body">
+                {status ? t(status.k, status.p) : ""}
+                {procPct !== null && (
+                  <>
+                    <div
+                      className="progress"
+                      role="progressbar"
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                      aria-valuenow={procPct}
+                    >
+                      <span style={{ width: `${procPct}%` }} />
+                    </div>
+                    <small>{t("procHint", { n: procPct })}</small>
+                  </>
+                )}
+              </div>
             </div>
 
             {audioUrl && (

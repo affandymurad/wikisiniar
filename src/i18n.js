@@ -18,6 +18,8 @@ export const translations = {
     chipBrowser: "Semua browser, desktop & mobile",
     chipNatural: "Suara natural bila tersedia",
     chipSave: "Simpan ke file",
+    recoEdge:
+      "**Rekomendasi:** setelah beberapa kali percobaan, **Microsoft Edge versi desktop** memberikan kualitas suara (TTS) terbaik: lebih natural, lancar, dan manusiawi dibanding browser lain. Edge desktop juga mendukung fitur merekam & menyimpan suara. Browser lain tetap bisa dipakai untuk mendengarkan, tetapi kualitas suaranya bergantung pada mesin suara masing-masing.",
 
     // gerbang
     gateEyebrow: "Tidak dapat dilanjutkan",
@@ -119,7 +121,8 @@ export const translations = {
       "Tidak ada audio yang dibagikan. Ulangi, pilih \"Entire Screen\", dan centang \"Also share system audio\". (Opsi itu tidak muncul? Berarti browser/OS Anda tidak mendukung — lihat panduan di bawah.)",
     stSilent:
       "Rekaman jadi, tapi terdeteksi HENING. Penyebab umum: system audio tidak ikut dibagikan (ulangi dan centang \"Also share system audio\" pada Entire Screen), volume sistem sedang mute, atau platform ini tidak mendukung.",
-    stProcessing: "Memangkas hening dan mengonversi ke MP3…",
+    stProcessing: "Rekaman selesai. Sedang memproses menjadi MP3…",
+    procHint: "{n}% — mohon tunggu dan jangan tutup tab ini. Artikel panjang bisa memakan waktu beberapa menit.",
     stReady: "Rekaman siap (hening di awal sudah dipangkas). Putar atau unduh di bawah.",
     stEmptyRec: "Rekaman kosong — kemungkinan system audio tidak ikut dibagikan.",
     stRecording: "Merekam & membacakan… jangan tutup dialog berbagi.",
@@ -175,6 +178,8 @@ export const translations = {
     chipBrowser: "All browsers, desktop & mobile",
     chipNatural: "Natural voices when available",
     chipSave: "Save to file",
+    recoEdge:
+      "**Recommendation:** after several rounds of testing, **Microsoft Edge on desktop** delivers the best text-to-speech (TTS) quality: more natural, fluent, and human-sounding than other browsers. Desktop Edge also supports recording & saving the audio. Other browsers can still be used for listening, but voice quality depends on each browser's own speech engine.",
 
     gateEyebrow: "Can't continue",
     gateTitleBrowser: "This browser isn't supported",
@@ -273,7 +278,8 @@ export const translations = {
       "No audio was shared. Try again, choose \"Entire Screen\" and tick \"Also share system audio\". (Option missing? Your browser/OS doesn't support it — see the guide below.)",
     stSilent:
       "The recording was created but sounds SILENT. Common causes: system audio wasn't shared (retry and tick \"Also share system audio\" on Entire Screen), system volume is muted, or this platform isn't supported.",
-    stProcessing: "Trimming silence and converting to MP3…",
+    stProcessing: "Recording finished. Processing into MP3…",
+    procHint: "{n}% — please wait and keep this tab open. Long articles can take a few minutes.",
     stReady: "Recording ready (leading silence trimmed). Play or download it below.",
     stEmptyRec: "Empty recording — system audio was probably not shared.",
     stRecording: "Recording & reading aloud… don't close the sharing dialog.",

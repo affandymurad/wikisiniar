@@ -9,7 +9,6 @@ import {
   CAN_SAVE,
   HAS_SPEECH,
   IS_MOBILE,
-  IS_SUPPORTED_BROWSER,
   baseLang,
   isNaturalVoice, isSafariFallbackVoice,
 } from "./support.js";
@@ -102,14 +101,10 @@ function Gate({ t, reason, onReload }) {
     ? t("browserMobile")
     : BROWSER.name || t("browserUnknown");
   const titleKey = {
-    mobile: "gateTitleMobile",
-    browser: "gateTitleBrowser",
     speech: "gateTitleSpeech",
     voice: "gateTitleNoVoice",
   }[reason];
   const leadKey = {
-    mobile: "gateLeadMobile",
-    browser: "gateLeadBrowser",
     speech: "gateLeadSpeech",
     voice: "gateLeadNoVoice",
   }[reason];
@@ -251,13 +246,7 @@ export default function App() {
     }
   };
 
-  const blockReason = IS_MOBILE
-    ? "mobile"
-    : !IS_SUPPORTED_BROWSER
-      ? "browser"
-      : !HAS_SPEECH
-        ? "speech"
-        : null;
+  const blockReason = !HAS_SPEECH ? "speech" : null;
 
   /* ----- Bahasa antarmuka ----- */
   useEffect(() => {

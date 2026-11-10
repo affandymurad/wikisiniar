@@ -64,7 +64,8 @@ export const CAN_SAVE =
  * Di Chrome/Edge, suara lokal OS (SAPI/espeak) dianggap robotik dan disembunyikan.
  */
 export function isNaturalVoice(v) {
-  if (BROWSER.id === "firefox") return true;
+  // Firefox, mobile, dan browser lain: tidak ada penanda kualitas, tampilkan semua suara.
+  if (IS_MOBILE || BROWSER.id === "firefox" || BROWSER.id === "other") return true;
   if (/natural/i.test(v.name)) return true;
   if (BROWSER.id === "chrome") return /^Google\b/i.test(v.name);
   if (BROWSER.id === "safari")

@@ -15,7 +15,7 @@ export const translations = {
     heroTitleEm: "yang terdengar natural.",
     heroLead:
       "Tempel tautan artikel Wikipedia, pilih suara natural, lalu dengarkan atau simpan sebagai file audio. Hanya judul, subjudul, dan isi artikel yang dibacakan.",
-    chipBrowser: "Chrome, Edge, Safari & Firefox desktop",
+    chipBrowser: "Semua browser, desktop & mobile",
     chipNatural: "Suara natural bila tersedia",
     chipSave: "Simpan ke file",
 
@@ -55,7 +55,7 @@ export const translations = {
     formLead: "Pilih suara, tempel tautan Wikipedia, lalu atur kecepatannya.",
     voice: "Pilih suara",
     voiceInfo:
-      "Chrome dan Edge hanya menampilkan suara natural; Safari menampilkan suara standar Apple (compact); Firefox menampilkan semua suara bawaan sistem. Gunakan filter bahasa untuk mempersempit daftar.",
+      "Chrome dan Edge desktop hanya menampilkan suara natural; Safari menampilkan suara standar Apple (compact); browser lain dan perangkat mobile menampilkan semua suara bawaan sistem. Gunakan filter bahasa untuk mempersempit daftar.",
     voiceLang: "Bahasa suara",
     voiceName: "Suara",
     allLangs: "Semua bahasa",
@@ -100,7 +100,7 @@ export const translations = {
     speakSaveTitle: "Membacakan sekaligus merekam system audio agar bisa disimpan",
     noSaveTitle: "Browser/perangkat ini tidak mendukung perekaman system audio",
     noSaveHint:
-      "Tombol Bacakan & Simpan dinonaktifkan karena perekaman system audio tidak tersedia di browser ini (gunakan Chrome/Edge di Windows, atau Chrome 141+ di macOS 14.2+). Safari dan Firefox hanya bisa membacakan, tidak bisa menyimpan.",
+      "Merekam & menyimpan suara hanya bisa dilakukan di Google Chrome atau Microsoft Edge versi desktop (Windows, ChromeOS, atau Chrome 141+ di macOS 14.2+). Di browser/perangkat ini Anda tetap bisa mendengarkan lewat tombol Bacakan, tetapi Bacakan & Simpan dinonaktifkan.",
 
     // status
     stEmpty: "Ambil artikel Wikipedia terlebih dahulu.",
@@ -172,7 +172,7 @@ export const translations = {
     heroTitleEm: "that sounds natural.",
     heroLead:
       "Paste a Wikipedia article link, pick a natural voice, then listen or save it as an audio file. Only the title, headings, and article body are read.",
-    chipBrowser: "Desktop Chrome, Edge, Safari & Firefox",
+    chipBrowser: "All browsers, desktop & mobile",
     chipNatural: "Natural voices when available",
     chipSave: "Save to file",
 
@@ -210,7 +210,7 @@ export const translations = {
     formLead: "Pick a voice, paste a Wikipedia link, then adjust the speed.",
     voice: "Choose a voice",
     voiceInfo:
-      "Chrome and Edge list natural voices only; Safari lists Apple's standard (compact) voices; Firefox lists every voice installed on your system. Use the language filter to narrow the list.",
+      "Desktop Chrome and Edge list natural voices only; Safari lists Apple's standard (compact) voices; other browsers and mobile devices list every voice installed on your system. Use the language filter to narrow the list.",
     voiceLang: "Voice language",
     voiceName: "Voice",
     allLangs: "All languages",
@@ -255,7 +255,7 @@ export const translations = {
     speakSaveTitle: "Reads aloud while recording system audio so it can be saved",
     noSaveTitle: "This browser/device can't record system audio",
     noSaveHint:
-      "Read & Save is disabled because system audio recording isn't available in this browser (use Chrome/Edge on Windows, or Chrome 141+ on macOS 14.2+). Safari and Firefox can read aloud but can't save.",
+      "Recording and saving audio only works in desktop Google Chrome or Microsoft Edge (Windows, ChromeOS, or Chrome 141+ on macOS 14.2+). In this browser/device you can still listen with Read aloud, but Read & Save is disabled.",
 
     stEmpty: "Fetch a Wikipedia article first.",
     stSpeaking: "Reading aloud…",

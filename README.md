@@ -9,25 +9,26 @@ audio* (`getDisplayMedia` + `MediaRecorder`).
 
 > ## Browser yang didukung
 >
-> Hanya **desktop**: Google Chrome, Microsoft Edge, Safari (macOS), dan Firefox.
-> Browser lain (Opera, Brave, Vivaldi, Chromium polos) dan semua perangkat mobile
-> (Android/iOS) akan melihat halaman "Browser ini belum didukung".
+> Semua browser, desktop maupun mobile, selama mendukung Web Speech API
+> (`speechSynthesis`). Mendengarkan (**Bacakan**) bisa di mana saja; **merekam &
+> menyimpan** suara hanya bisa di **Google Chrome atau Microsoft Edge versi
+> desktop**.
 >
 > | Browser | Suara yang ditampilkan | Simpan ke MP3 |
 > | --- | --- | --- |
 > | **Edge** | Suara neural `Microsoft … Online (Natural)` (bawaan, butuh internet) | Ya |
 > | **Chrome** | Suara jaringan `Google …` (butuh internet) | Ya |
 > | **Safari** | Suara standar Apple (**compact**). Safari tidak menampilkan suara Enhanced/Premium/Siri ke halaman web, jadi kualitasnya lebih "mesin" dibanding Chrome/Edge | Tidak |
-> | **Firefox** | Semua suara bawaan sistem operasi (kualitas bergantung pada OS) | Tidak |
+> | **Firefox, mobile, dan browser lain** | Semua suara bawaan sistem operasi (kualitas bergantung pada OS) | Tidak |
 >
 > Di Chrome dan Edge, suara lokal OS yang terdengar robotik
 > disembunyikan. Jika browser tidak menyediakan suara yang bisa dipakai (setelah
 > menunggu ±4 detik), aplikasi menampilkan panduan.
 >
-> **Safari dan Firefox hanya bisa membacakan.** Menyimpan ke MP3 butuh perekaman
-> system audio yang hanya tersedia di Chrome/Edge, jadi tombol **Bacakan &
-> Simpan** dinonaktifkan di sana. Tampilan tetap responsif di layar kecil, tetapi
-> fitur hanya berjalan di desktop.
+> **Hanya Chrome/Edge desktop yang bisa menyimpan.** Menyimpan ke MP3 butuh
+> perekaman system audio yang hanya tersedia di sana, jadi tombol **Bacakan &
+> Simpan** dinonaktifkan di Safari, Firefox, dan semua perangkat mobile; tombol
+> **Bacakan** tetap berfungsi.
 
 ## Fitur
 
@@ -79,7 +80,7 @@ npm run dev
 ```
 
 Buka alamat yang ditampilkan (biasanya `http://localhost:5173`) di
-**Chrome/Edge/Safari/Firefox desktop**.
+browser apa pun (merekam hanya di Chrome/Edge desktop).
 
 Build produksi:
 
@@ -152,8 +153,7 @@ tetap tersedia.
 | Chrome di **ChromeOS** | ✅ Didukung penuh |
 | Chrome di **macOS** | ✅ Hanya Chrome 141+ **dan** macOS 14.2+ |
 | Chrome di **Linux** | ❌ Tidak (hanya lewat flag eksperimental browser) |
-| **Safari** (macOS) dan **Firefox** | ❌ Tidak bisa merekam (hanya **Bacakan**) |
-| Browser lain / **Android / iOS** | ❌ Tidak didukung |
+| **Safari**, **Firefox**, browser lain, **Android / iOS** | ❌ Tidak bisa merekam (hanya **Bacakan**) |
 
 Pada platform tanpa dukungan perekaman, tombol **Bacakan** tetap berfungsi
 tetapi **Bacakan & Simpan** dinonaktifkan.

@@ -59,9 +59,9 @@ export const CAN_SAVE =
  * Suara "natural":
  *  - Edge: suara neural "Microsoft … Online (Natural)".
  *  - Chrome: suara jaringan "Google …".
- *  - Safari: suara "Enhanced"/"Premium" (diunduh di Pengaturan macOS) dan Siri.
+ *  - Safari: Enhanced/Premium/Siri jika ada; bila tidak (umumnya), suara compact lewat isSafariFallbackVoice.
  *  - Firefox: tidak ada penanda kualitas, jadi semua suara bawaan sistem ditampilkan.
- * Di Chrome/Edge/Safari, suara lokal OS (SAPI/espeak) dianggap robotik dan disembunyikan.
+ * Di Chrome/Edge, suara lokal OS (SAPI/espeak) dianggap robotik dan disembunyikan.
  */
 export function isNaturalVoice(v) {
   if (BROWSER.id === "firefox") return true;
@@ -71,6 +71,13 @@ export function isNaturalVoice(v) {
     // Nama bisa tanpa "(Enhanced)"; voiceURI macOS berbentuk com.apple.voice.premium.en-US.Ava
     return /\b(Enhanced|Premium|Siri)\b|\.(enhanced|premium)\./i.test(`${v.name} ${v.voiceURI}`);
   return false;
+}
+
+/** Safari tanpa unduhan Enhanced/Premium: suara standar Apple, tanpa novelty/Eloquence. */
+export function isSafariFallbackVoice(v) {
+  if (BROWSER.id !== "safari") return false;
+  return /com\.apple\.(voice|ttsbundle)\./i.test(v.voiceURI || "") &&
+    !/eloquence|speech\.synthesis/i.test(v.voiceURI || "");
 }
 
 export function baseLang(tag) {

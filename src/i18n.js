@@ -32,14 +32,14 @@ export const translations = {
       "Browser Anda tidak menyediakan mesin suara (speechSynthesis). Perbarui browser ke versi terbaru lalu muat ulang halaman.",
     gateTitleNoVoice: "Suara natural tidak ditemukan",
     gateLeadNoVoice:
-      "Browser ini belum menyediakan suara yang bisa dipakai. Chrome, Edge, dan Safari hanya menampilkan suara natural agar hasilnya tidak terdengar robotik.",
+      "Browser ini belum menyediakan suara yang bisa dipakai. Chrome dan Edge hanya menampilkan suara natural agar hasilnya tidak terdengar robotik.",
     gateTipEdge:
       "**Edge:** suara natural (\"Microsoft … Online (Natural)\") bawaan Edge dan butuh koneksi internet. Perbarui Edge, tunggu beberapa detik, lalu muat ulang.",
     gateTipChrome:
       "**Chrome:** suara \"Google …\" butuh koneksi internet. Pastikan Anda online dan Chrome versi terbaru, lalu muat ulang.",
     gateDetected: "Browser terdeteksi",
     gateTipSafari:
-      "**Safari (Mac):** unduh suara \"Enhanced\" atau \"Premium\" di Pengaturan Sistem → Aksesibilitas → Read & Speak (Konten Terucap di macOS lama) → Suara Sistem → Kelola Suara, lalu muat ulang.",
+      "**Safari (Mac):** Safari hanya memberi halaman web suara standar (compact) dan tidak menampilkan suara Enhanced/Premium. Jika daftar tetap kosong, tutup Safari sepenuhnya (Cmd+Q), buka lagi, atau gunakan Chrome/Edge untuk suara yang lebih natural.",
     gateTipFirefox:
       "**Firefox:** memakai suara bawaan sistem operasi. Pasang paket suara bahasa yang Anda perlukan di pengaturan sistem (Windows: Waktu & bahasa → Ucapan), lalu muat ulang.",
     gateGetChrome: "Unduh Chrome",
@@ -55,7 +55,7 @@ export const translations = {
     formLead: "Pilih suara, tempel tautan Wikipedia, lalu atur kecepatannya.",
     voice: "Pilih suara",
     voiceInfo:
-      "Chrome, Edge, dan Safari hanya menampilkan suara natural; Firefox menampilkan semua suara bawaan sistem. Gunakan filter bahasa untuk mempersempit daftar.",
+      "Chrome dan Edge hanya menampilkan suara natural; Safari menampilkan suara standar Apple (compact); Firefox menampilkan semua suara bawaan sistem. Gunakan filter bahasa untuk mempersempit daftar.",
     voiceLang: "Bahasa suara",
     voiceName: "Suara",
     allLangs: "Semua bahasa",
@@ -188,14 +188,14 @@ export const translations = {
       "Your browser doesn't provide a speech engine (speechSynthesis). Update your browser to the latest version and reload the page.",
     gateTitleNoVoice: "No natural voices found",
     gateLeadNoVoice:
-      "This browser doesn't offer any usable voice yet. Chrome, Edge, and Safari only list natural voices to avoid robotic-sounding output.",
+      "This browser doesn't offer any usable voice yet. Chrome and Edge only list natural voices to avoid robotic-sounding output.",
     gateTipEdge:
       "**Edge:** natural voices (\"Microsoft … Online (Natural)\") are built in and need an internet connection. Update Edge, wait a few seconds, then reload.",
     gateTipChrome:
       "**Chrome:** \"Google …\" voices need an internet connection. Make sure you're online and on the latest Chrome, then reload.",
     gateDetected: "Detected browser",
     gateTipSafari:
-      "**Safari (Mac):** download \"Enhanced\" or \"Premium\" voices in System Settings → Accessibility → Read & Speak (Spoken Content on older macOS) → System Voice → Manage Voices, then reload.",
+      "**Safari (Mac):** Safari only gives web pages the standard (compact) voices and does not expose Enhanced/Premium voices. If the list stays empty, fully quit Safari (Cmd+Q) and reopen it, or use Chrome/Edge for more natural voices.",
     gateTipFirefox:
       "**Firefox:** uses your operating system's voices. Install the voice pack for the language you need in system settings (Windows: Time & language → Speech), then reload.",
     gateGetChrome: "Get Chrome",
@@ -210,7 +210,7 @@ export const translations = {
     formLead: "Pick a voice, paste a Wikipedia link, then adjust the speed.",
     voice: "Choose a voice",
     voiceInfo:
-      "Chrome, Edge, and Safari list natural voices only; Firefox lists every voice installed on your system. Use the language filter to narrow the list.",
+      "Chrome and Edge list natural voices only; Safari lists Apple's standard (compact) voices; Firefox lists every voice installed on your system. Use the language filter to narrow the list.",
     voiceLang: "Voice language",
     voiceName: "Voice",
     allLangs: "All languages",

@@ -11,7 +11,7 @@ import {
   IS_MOBILE,
   IS_SUPPORTED_BROWSER,
   baseLang,
-  isNaturalVoice,
+  isNaturalVoice, isSafariFallbackVoice,
 } from "./support.js";
 
 /* ---------- Util ---------- */
@@ -286,21 +286,39 @@ export default function App() {
     const synth = window.speechSynthesis;
 
     const load = () => {
-      const natural = synth.getVoices().filter(isNaturalVoice);
+      const all = synth.getVoices();
+      let natural = all.filter(isNaturalVoice);
+      // Safari tanpa suara Enhanced/Premium: pakai suara standar Apple (bukan novelty/Eloquence).
+      if (!natural.length) {
+        const std = all.filter(isSafariFallbackVoice);
+        // Buang versi super-compact bila versi compact (lebih bagus) dengan suara yang sama ada.
+        const key = (v) => `${v.lang}|${v.name}`;
+        const compact = new Set(std.filter((v) => /\.compact\./.test(v.voiceURI)).map(key));
+        natural = std.filter((v) => !/super-compact/.test(v.voiceURI) || !compact.has(key(v)));
+      }
       if (!natural.length) return;
       natural.sort(
         (a, b) => a.lang.localeCompare(b.lang) || a.name.localeCompare(b.name)
       );
-      setVoices(natural);
+      setVoices((prev) =>
+        prev.length === natural.length && prev.every((v, i) => v.voiceURI === natural[i].voiceURI)
+          ? prev
+          : natural
+      );
     };
 
     load();
     synth.addEventListener("voiceschanged", load);
+    // Safari sering tidak memicu "voiceschanged" sama sekali; cek berkala sampai suara muncul.
+    const poll = setInterval(load, 500);
+    const stopPoll = setTimeout(() => clearInterval(poll), 8000);
     // Suara online kadang datang terlambat; beri waktu sebelum menyatakan "tidak ada".
     const timer = setTimeout(() => setVoicesTimedOut(true), 4000);
     return () => {
       synth.removeEventListener("voiceschanged", load);
       clearTimeout(timer);
+      clearInterval(poll);
+      clearTimeout(stopPoll);
     };
   }, [blockReason]);
 

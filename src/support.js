@@ -1,0 +1,76 @@
+/* Deteksi browser / perangkat dan penyaringan suara natural. */
+
+const nav = typeof navigator !== "undefined" ? navigator : null;
+
+export const IS_MOBILE =
+  !!nav &&
+  (/Android|iPhone|iPad|iPod|Mobile|IEMobile|Opera Mini/i.test(nav.userAgent) ||
+    // iPadOS modern menyamar sebagai Mac tapi punya layar sentuh
+    (nav.platform === "MacIntel" && nav.maxTouchPoints > 1));
+
+/** Mengembalikan "chrome", "edge", atau "other" (+ nama untuk ditampilkan). */
+function detectBrowser() {
+  if (!nav) return { id: "other", name: "" };
+  const ua = nav.userAgent;
+  const brands = (nav.userAgentData?.brands || []).map((b) => b.brand);
+  const hasBrand = (re) => brands.some((b) => re.test(b));
+
+  if (/Firefox|FxiOS/i.test(ua)) return { id: "firefox", name: "Firefox" };
+  if (/OPR\/|Opera/i.test(ua) || hasBrand(/Opera/i))
+    return { id: "other", name: "Opera" };
+  if (/Vivaldi/i.test(ua) || hasBrand(/Vivaldi/i))
+    return { id: "other", name: "Vivaldi" };
+  if (nav.brave || hasBrand(/Brave/i)) return { id: "other", name: "Brave" };
+  if (/SamsungBrowser|YaBrowser|UCBrowser/i.test(ua))
+    return { id: "other", name: "Browser lain" };
+
+  if (hasBrand(/Microsoft Edge/i) || /\bEdg\//.test(ua))
+    return { id: "edge", name: "Microsoft Edge" };
+
+  if (brands.length) {
+    return hasBrand(/Google Chrome/i)
+      ? { id: "chrome", name: "Google Chrome" }
+      : { id: "other", name: "Chromium" };
+  }
+  if (/\bChrome\//.test(ua)) return { id: "chrome", name: "Google Chrome" };
+  if (/Safari\//.test(ua) && /Version\//.test(ua) && !/Chrom|Android/i.test(ua))
+    return { id: "safari", name: "Safari" };
+  if (/Safari\//.test(ua)) return { id: "other", name: "Safari" };
+  return { id: "other", name: "" };
+}
+
+export const BROWSER = detectBrowser();
+export const IS_SUPPORTED_BROWSER = ["chrome", "edge", "safari", "firefox"].includes(BROWSER.id);
+
+// Hanya Chrome/Edge yang bisa merekam system audio (Firefox tidak mendukungnya).
+const CAN_RECORD_BROWSER = BROWSER.id === "chrome" || BROWSER.id === "edge";
+
+export const HAS_SPEECH =
+  typeof window !== "undefined" && "speechSynthesis" in window;
+
+const HAS_DISPLAY_MEDIA =
+  !!nav?.mediaDevices && typeof nav.mediaDevices.getDisplayMedia === "function";
+const HAS_RECORDER = typeof window !== "undefined" && "MediaRecorder" in window;
+
+export const CAN_SAVE =
+  !IS_MOBILE && CAN_RECORD_BROWSER && HAS_DISPLAY_MEDIA && HAS_RECORDER;
+
+/**
+ * Suara "natural":
+ *  - Edge: suara neural "Microsoft … Online (Natural)".
+ *  - Chrome: suara jaringan "Google …".
+ *  - Safari: suara "Enhanced"/"Premium" (diunduh di Pengaturan macOS) dan Siri.
+ *  - Firefox: tidak ada penanda kualitas, jadi semua suara bawaan sistem ditampilkan.
+ * Di Chrome/Edge/Safari, suara lokal OS (SAPI/espeak) dianggap robotik dan disembunyikan.
+ */
+export function isNaturalVoice(v) {
+  if (BROWSER.id === "firefox") return true;
+  if (/natural/i.test(v.name)) return true;
+  if (BROWSER.id === "chrome") return /^Google\b/i.test(v.name);
+  if (BROWSER.id === "safari") return /\((Enhanced|Premium)\)|Siri/i.test(v.name);
+  return false;
+}
+
+export function baseLang(tag) {
+  return tag.split(/[-_]/)[0].toLowerCase();
+}

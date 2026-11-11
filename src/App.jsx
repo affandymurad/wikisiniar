@@ -521,7 +521,11 @@ export default function App() {
     const rawVoice = (selectedVoice?.name || "").split(" - ")[0].replace(/\s*Online\s*\(Natural\)/i, "");
     const platform = (rawVoice.match(/^(Microsoft|Google|Apple)\b/i)?.[1] || "").trim();
     const shortName = rawVoice.replace(/^(Microsoft|Google|Apple)\s+/i, "");
-    const voiceName = [platform || BROWSER.name, shortName].filter(Boolean).map(fileSafe).join("_");
+    // Mode Speech macOS: suara dipilih di sistem, bukan di dropdown
+    const voiceName =
+      manual === true
+        ? "Apple_Personal_Voice"
+        : [platform || BROWSER.name, shortName].filter(Boolean).map(fileSafe).join("_");
     setDownloadName(
       ["Wikisiniar-Wikipedia", article?.lang, article && fileSafe(article.title), voiceName && fileSafe(voiceName)]
         .filter(Boolean)

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ThemeMenu from "./ThemeMenu.jsx";
 import { trimSilence } from "./audio.js";
-import { SAMPLE_LANGS, sampleFor } from "./samples.js";
+import { sampleFor } from "./samples.js";
 import { WikiError, fetchArticle, parseWikiUrl } from "./wiki.js";
 import { LANGS, detectInitialLang, makeT } from "./i18n.js";
 import {
@@ -184,7 +184,6 @@ export default function App() {
   const [text, setText] = useState("");
   const [wikiUrl, setWikiUrl] = useState("");
   const [fetching, setFetching] = useState(false);
-  const [readLang, setReadLang] = useState(""); // "" = otomatis (ikut artikel)
   const [paused, setPaused] = useState(false);
   const [article, setArticle] = useState(null); // { lang, title }
   const [rate, setRate] = useState(1);
@@ -208,8 +207,6 @@ export default function App() {
     if (queryDone.current) return;
     queryDone.current = true;
     const q = new URLSearchParams(window.location.search);
-    const ql = (q.get("lang") || "").toLowerCase().split(/[-_]/)[0];
-    if (/^[a-z]{2,3}$/.test(ql)) setReadLang(ql);
     let raw = (q.get("url") || "").trim();
     if (!raw) return;
     const oldid = q.get("oldid");
@@ -373,24 +370,10 @@ export default function App() {
     [voices, effectiveFilter]
   );
 
-  // Bahasa yang dipakai membaca: suara multilingual mengikuti bahasa artikel/filter, bukan bahasa bawaannya
+  // Suara multilingual dikunci ke bahasa suara yang dipilih (filter "Bahasa suara"),
+  // supaya tidak berpindah aksen saat bertemu kata serapan.
   const speechLang = (v) =>
-    isMultilingual(v)
-      ? readLang || article?.lang || (effectiveFilter !== "all" ? effectiveFilter : v.lang)
-      : v.lang;
-
-  const readLangOptions = useMemo(() => {
-    const codes = [...new Set([...SAMPLE_LANGS, ...langOptions.map((o) => o.code)])];
-    let dn = null;
-    try {
-      dn = new Intl.DisplayNames([lang], { type: "language" });
-    } catch {
-      /* Intl.DisplayNames tidak tersedia */
-    }
-    return codes
-      .map((c) => ({ code: c, label: (() => { try { return dn?.of(c) || c; } catch { return c; } })() }))
-      .sort((a, b) => a.label.localeCompare(b.label, lang));
-  }, [langOptions, lang]);
+    isMultilingual(v) && effectiveFilter !== "all" ? effectiveFilter : v.lang;
 
   const selectedVoice =
     filteredVoices.find((v) => voiceKey(v) === selectedKey) || filteredVoices[0];
@@ -791,22 +774,6 @@ export default function App() {
                 </div>
               </div>
               <p className="hint-line">{voiceCountText}</p>
-              {selectedVoice && isMultilingual(selectedVoice) && (
-                <label className="field" style={{ marginTop: 12 }}>
-                  <span className="sub-label">{t("readLang")}</span>
-                  <span className="select-wrap">
-                    <select value={readLang} onChange={(e) => setReadLang(e.target.value)}>
-                      <option value="">{t("readLangAuto")}</option>
-                      {readLangOptions.map((o) => (
-                        <option key={o.code} value={o.code}>
-                          {o.label}
-                        </option>
-                      ))}
-                    </select>
-                  </span>
-                  <span className="hint-line">{t("readLangInfo")}</span>
-                </label>
-              )}
             </div>
 
             {/* 2. Teks */}
@@ -1015,10 +982,6 @@ export default function App() {
               <li>
                 <code>&amp;oldid=123456</code>
                 <span>{t("queryOldid")}</span>
-              </li>
-              <li>
-                <code>&amp;lang=id</code>
-                <span>{t("queryLang")}</span>
               </li>
               <li>
                 <code>&amp;auto=0</code>

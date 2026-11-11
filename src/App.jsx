@@ -73,7 +73,7 @@ function pickMimeType() {
 /** Suara "Multilingual" (mis. Edge "…Multilingual Online (Natural)") bisa membaca semua bahasa. */
 const isMultilingual = (v) => /multilingual/i.test(v.name);
 
-const MANUAL_WAIT_MS = 5000; // batas menunggu suara Speech macOS mulai
+const MANUAL_WAIT_MS = 10000; // batas menunggu suara Speech macOS mulai
 const MANUAL_END_SILENCE_MS = 2500; // hening selama ini = bacaan selesai
 
 const voiceKey = (v) => `${v.voiceURI}|${v.name}|${v.lang}`;

@@ -116,6 +116,7 @@ artikel langsung diambil:
 
 - `?url=https://id.wikipedia.org/wiki/Indonesia`
 - `&oldid=123456` untuk revisi tertentu
+- `&lang=id` mengunci bahasa baca untuk suara multilingual (mis. `id`, `en`)
 - `&auto=0` hanya mengisi kolom, tanpa langsung mengambil artikel
 
 Contoh: `https://wikisiniar.web.app/?url=https://id.wikipedia.org/wiki/Indonesia`

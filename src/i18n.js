@@ -156,6 +156,11 @@ export const translations = {
     queryAuto: "Opsional: hanya mengisi kolom, tanpa langsung mengambil artikel.",
     queryExample: "Contoh:",
 
+    readLang: "Bahasa baca",
+    readLangAuto: "Otomatis (ikuti bahasa artikel)",
+    readLangInfo: "Khusus suara multilingual: kunci bahasa agar aksen tidak berpindah saat bertemu kata serapan.",
+    queryLang: "Opsional: kunci bahasa baca untuk suara multilingual (mis. id, en) agar aksen tidak berubah pada kata serapan.",
+
     activeVoice: "Suara aktif",
     noVoiceSelected: "Belum ada suara terpilih.",
     footerNote: "Artikel diambil dari API Wikipedia; suara dibuat oleh mesin suara bawaan browser Anda. Tanpa server sendiri, tanpa model eksternal.",
@@ -310,6 +315,11 @@ export const translations = {
     queryOldid: "Optional: a specific revision.",
     queryAuto: "Optional: only fills the field, without fetching the article.",
     queryExample: "Example:",
+
+    readLang: "Reading language",
+    readLangAuto: "Auto (follow article language)",
+    readLangInfo: "Multilingual voices only: lock the language so the accent doesn't switch on loanwords.",
+    queryLang: "Optional: lock the reading language for multilingual voices (e.g. id, en) so the accent doesn't change on loanwords.",
 
     activeVoice: "Active voice",
     noVoiceSelected: "No voice selected yet.",

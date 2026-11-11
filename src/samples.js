@@ -23,6 +23,8 @@ const SAMPLES = {
   su: "Halo! Ieu conto sora alami anu dibacakeun ku browser anjeun.",
 };
 
+export const SAMPLE_LANGS = Object.keys(SAMPLES);
+
 export function sampleFor(langTag) {
   const base = (langTag || "en").split(/[-_]/)[0].toLowerCase();
   return SAMPLES[base] || SAMPLES.en;

@@ -69,6 +69,9 @@ function pickMimeType() {
   return "";
 }
 
+/** Suara "Multilingual" (mis. Edge "…Multilingual Online (Natural)") bisa membaca semua bahasa. */
+const isMultilingual = (v) => /multilingual/i.test(v.name);
+
 const voiceKey = (v) => `${v.voiceURI}|${v.name}|${v.lang}`;
 
 /** Render **tebal** di dalam string terjemahan. */
@@ -363,9 +366,13 @@ export default function App() {
     () =>
       effectiveFilter === "all"
         ? voices
-        : voices.filter((v) => baseLang(v.lang) === effectiveFilter),
+        : voices.filter((v) => baseLang(v.lang) === effectiveFilter || isMultilingual(v)),
     [voices, effectiveFilter]
   );
+
+  // Bahasa yang dipakai membaca: suara multilingual mengikuti bahasa artikel/filter, bukan bahasa bawaannya
+  const speechLang = (v) =>
+    isMultilingual(v) ? article?.lang || (effectiveFilter !== "all" ? effectiveFilter : v.lang) : v.lang;
 
   const selectedVoice =
     filteredVoices.find((v) => voiceKey(v) === selectedKey) || filteredVoices[0];
@@ -399,7 +406,7 @@ export default function App() {
         const u = new SpeechSynthesisUtterance(s);
         if (selectedVoice) {
           u.voice = selectedVoice;
-          u.lang = selectedVoice.lang;
+          u.lang = speechLang(selectedVoice);
         }
         u.rate = rate;
         u.onerror = (e) => {
@@ -449,9 +456,9 @@ export default function App() {
       return;
     }
     setSpeaking(false);
-    const u = new SpeechSynthesisUtterance(sampleFor(selectedVoice.lang));
+    const u = new SpeechSynthesisUtterance(sampleFor(speechLang(selectedVoice)));
     u.voice = selectedVoice;
-    u.lang = selectedVoice.lang;
+    u.lang = speechLang(selectedVoice);
     u.rate = rate;
     const done = () => {
       if (previewIdRef.current === id) setPreviewing(false);

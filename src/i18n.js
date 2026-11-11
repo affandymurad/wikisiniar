@@ -157,6 +157,17 @@ export const translations = {
     queryExample: "Contoh:",
 
 
+    copy: "Salin",
+    copied: "Teks artikel disalin ke clipboard.",
+    selectAll: "Pilih semua",
+    stCopyFail: "Tidak bisa menyalin otomatis. Teks sudah disorot — tekan Cmd+C.",
+    speakSaveMac: "Simpan via Speech macOS",
+    speakSaveMacTitle: "Merekam suara dari fitur Speech macOS (klik kanan) lalu mengubahnya jadi MP3",
+    speakSaveMacHint: "**Khusus Chrome/Edge di Mac:** klik tombol, pilih **Entire Screen** + **Also share system audio**, lalu dalam 5 detik sorot teks artikel (**Pilih semua**) → klik kanan → **Speech → Start Speaking**. Bisa memakai suara **Personal Voice** yang diatur di Pengaturan Sistem → Aksesibilitas → Read & Speak. Rekaman berhenti otomatis saat suara berhenti, lalu diubah ke MP3.",
+    stManualWait: "Menunggu suara… dalam 5 detik, klik kanan teks terpilih → Speech → Start Speaking.",
+    stManualHeard: "Suara terdeteksi. Merekam… berhenti otomatis saat suara berhenti.",
+    stManualTimeout: "Tidak ada suara dalam 5 detik, perekaman dibatalkan. Coba lagi.",
+
     activeVoice: "Suara aktif",
     noVoiceSelected: "Belum ada suara terpilih.",
     footerNote: "Artikel diambil dari API Wikipedia; suara dibuat oleh mesin suara bawaan browser Anda. Tanpa server sendiri, tanpa model eksternal.",
@@ -312,6 +323,17 @@ export const translations = {
     queryAuto: "Optional: only fills the field, without fetching the article.",
     queryExample: "Example:",
 
+
+    copy: "Copy",
+    copied: "Article text copied to the clipboard.",
+    selectAll: "Select all",
+    stCopyFail: "Couldn't copy automatically. The text is highlighted — press Cmd+C.",
+    speakSaveMac: "Save via macOS Speech",
+    speakSaveMacTitle: "Records the sound from macOS Speech (right-click) and converts it to MP3",
+    speakSaveMacHint: "**Chrome/Edge on Mac only:** click the button, choose **Entire Screen** + **Also share system audio**, then within 5 seconds highlight the article text (**Select all**) → right-click → **Speech → Start Speaking**. You can use a **Personal Voice** set in System Settings → Accessibility → Read & Speak. Recording stops automatically when the speech stops, then it's converted to MP3.",
+    stManualWait: "Waiting for sound… within 5 seconds, right-click the selected text → Speech → Start Speaking.",
+    stManualHeard: "Sound detected. Recording… it stops automatically when the speech ends.",
+    stManualTimeout: "No sound within 5 seconds, recording cancelled. Try again.",
 
     activeVoice: "Active voice",
     noVoiceSelected: "No voice selected yet.",

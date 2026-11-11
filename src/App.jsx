@@ -7,6 +7,7 @@ import { LANGS, detectInitialLang, makeT } from "./i18n.js";
 import {
   BROWSER,
   CAN_SAVE,
+  CAN_SAVE_MAC,
   HAS_SPEECH,
   IS_MOBILE,
   baseLang,
@@ -71,6 +72,9 @@ function pickMimeType() {
 
 /** Suara "Multilingual" (mis. Edge "…Multilingual Online (Natural)") bisa membaca semua bahasa. */
 const isMultilingual = (v) => /multilingual/i.test(v.name);
+
+const MANUAL_WAIT_MS = 5000; // batas menunggu suara Speech macOS mulai
+const MANUAL_END_SILENCE_MS = 2500; // hening selama ini = bacaan selesai
 
 const voiceKey = (v) => `${v.voiceURI}|${v.name}|${v.lang}`;
 
@@ -199,6 +203,7 @@ export default function App() {
   const streamRef = useRef(null);
   const audioUrlRef = useRef(null);
   const previewIdRef = useRef(0);
+  const articleRef = useRef(null);
 
   const t = useMemo(() => makeT(lang), [lang]);
   /* Query URL: ?url=<artikel>&oldid=<revisi>&auto=0 (auto=0 hanya mengisi kolom) */
@@ -220,6 +225,27 @@ export default function App() {
   const [downloadName, setDownloadName] = useState("Wikisiniar-Wikipedia");
 
   const say = (k, p, tone = "info") => setStatus({ k, p, tone });
+
+  const handleSelectAll = () => {
+    const el = articleRef.current;
+    if (!el) return;
+    el.focus();
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  };
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      say("copied", null, "ok");
+    } catch {
+      handleSelectAll();
+      say("stCopyFail", null, "warn");
+    }
+  };
 
   const handleFetch = (e) => {
     e?.preventDefault();
@@ -490,7 +516,7 @@ export default function App() {
   };
 
   /* ----- Bacakan + rekam system audio + simpan ----- */
-  const handleSpeakAndRecord = async () => {
+  const handleSpeakAndRecord = async (manual = false) => {
     if (!CAN_SAVE) return;
     const rawVoice = (selectedVoice?.name || "").split(" - ")[0].replace(/\s*Online\s*\(Natural\)/i, "");
     const platform = (rawVoice.match(/^(Microsoft|Google|Apple)\b/i)?.[1] || "").trim();
@@ -547,6 +573,9 @@ export default function App() {
     let audioCtx = null;
     let meterTimer = null;
     let peak = 0;
+    let heardAt = 0;
+    let cancelled = false;
+    const startedAt = Date.now();
     try {
       audioCtx = new AudioContext();
       const src = audioCtx.createMediaStreamSource(new MediaStream(audioTracks));
@@ -556,11 +585,26 @@ export default function App() {
       const buf = new Float32Array(analyser.fftSize);
       meterTimer = setInterval(() => {
         analyser.getFloatTimeDomainData(buf);
+        let tickPeak = 0;
         for (let i = 0; i < buf.length; i++) {
           const a = Math.abs(buf[i]);
-          if (a > peak) peak = a;
+          if (a > tickPeak) tickPeak = a;
         }
-      }, 200);
+        if (tickPeak > peak) peak = tickPeak;
+        if (!manual) return;
+        // Mode Speech macOS: tunggu suara mulai (maks 5 dtk), berhenti otomatis saat suara berhenti
+        const now = Date.now();
+        if (tickPeak > 0.01) {
+          if (!heardAt) say("stManualHeard");
+          heardAt = now;
+        }
+        if (!heardAt && now - startedAt > MANUAL_WAIT_MS) {
+          cancelled = true;
+          if (recorder.state !== "inactive") recorder.stop();
+        } else if (heardAt && now - heardAt > MANUAL_END_SILENCE_MS) {
+          if (recorder.state !== "inactive") recorder.stop();
+        }
+      }, 100);
     } catch {
       /* pengukur bersifat opsional */
     }
@@ -584,6 +628,10 @@ export default function App() {
       streamRef.current = null;
       recorderRef.current = null;
       setRecording(false);
+      if (cancelled) {
+        say("stManualTimeout", null, "warn");
+        return;
+      }
       if (parts.length) {
         say("stProcessing");
         setProcPct(0);
@@ -611,6 +659,11 @@ export default function App() {
 
     recorder.start();
     setRecording(true);
+
+    if (manual) {
+      say("stManualWait");
+      return;
+    }
 
     const ok = speak((success) => {
       // Jeda singkat supaya ekor suara tidak terpotong
@@ -797,6 +850,7 @@ export default function App() {
                 </button>
               </form>
               <div
+                ref={articleRef}
                 className="article-view"
                 tabIndex={0}
                 role="document"
@@ -808,6 +862,22 @@ export default function App() {
               <div className="text-tools">
                 <span className="hint-line">{t("chars", { n: text.length.toLocaleString(lang) })}</span>
                 <span className="spacer" />
+                <button
+                  type="button"
+                  className="btn btn-ghost btn-sm"
+                  onClick={handleSelectAll}
+                  disabled={!text}
+                >
+                  {t("selectAll")}
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-ghost btn-sm"
+                  onClick={handleCopy}
+                  disabled={!text}
+                >
+                  {t("copy")}
+                </button>
                 <button
                   type="button"
                   className="btn btn-ghost btn-sm"
@@ -898,7 +968,7 @@ export default function App() {
               <button
                 type="button"
                 className="btn btn-accent btn-wide"
-                onClick={handleSpeakAndRecord}
+                onClick={() => handleSpeakAndRecord(false)}
                 disabled={!CAN_SAVE || recording || speaking}
                 title={CAN_SAVE ? t("speakSaveTitle") : t("noSaveTitle")}
               >
@@ -907,7 +977,22 @@ export default function App() {
                 </svg>
                 {recording ? t("recording") : t("speakSave")}
               </button>
+              {CAN_SAVE_MAC && (
+                <button
+                  type="button"
+                  className="btn btn-accent btn-wide"
+                  onClick={() => handleSpeakAndRecord(true)}
+                  disabled={!text || recording || speaking}
+                  title={t("speakSaveMacTitle")}
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true" className="ico">
+                    <path d="M12 3v12M7 11l5 5 5-5M5 20h14" />
+                  </svg>
+                  {t("speakSaveMac")}
+                </button>
+              )}
             </div>
+            {CAN_SAVE_MAC && <p className="note">{rich(t("speakSaveMacHint"))}</p>}
 
             {!CAN_SAVE && <p className="note">{t("noSaveHint")}</p>}
 

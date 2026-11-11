@@ -55,6 +55,11 @@ const HAS_RECORDER = typeof window !== "undefined" && "MediaRecorder" in window;
 export const CAN_SAVE =
   !IS_MOBILE && CAN_RECORD_BROWSER && HAS_DISPLAY_MEDIA && HAS_RECORDER;
 
+export const IS_MAC = !!nav && !IS_MOBILE && /Macintosh|Mac OS X/i.test(nav.userAgent);
+
+/** Simpan lewat fitur Speech macOS (klik kanan): hanya Chrome/Edge di Mac. */
+export const CAN_SAVE_MAC = IS_MAC && CAN_SAVE;
+
 /**
  * Suara "natural":
  *  - Edge: suara neural "Microsoft … Online (Natural)".

@@ -680,8 +680,8 @@ export default function App() {
     else say("stRecording");
   };
 
-  const downloadExt = audioMime.includes("mpeg")
-    ? "mp3"
+  const downloadExt = audioMime.includes("ogg")
+    ? "ogg"
     : audioMime.includes("mp4")
       ? "m4a"
       : "webm";

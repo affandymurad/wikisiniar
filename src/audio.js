@@ -1,12 +1,12 @@
-/* Pemangkasan hening di awal/akhir rekaman, hasil dikodekan ke MP3.
+/* Pemangkasan hening di awal/akhir rekaman, hasil dikodekan ke OGG (Opus).
    Pekerjaan berat berjalan di Web Worker agar halaman tidak membeku. */
-import { trimAndEncode } from "./mp3core.js";
+import { trimAndEncode } from "./oggcore.js";
 
 function runInWorker(channels, sampleRate, onProgress) {
   return new Promise((resolve, reject) => {
     let worker;
     try {
-      worker = new Worker(new URL("./mp3.worker.js", import.meta.url), { type: "module" });
+      worker = new Worker(new URL("./ogg.worker.js", import.meta.url), { type: "module" });
     } catch (err) {
       reject(err);
       return;
@@ -37,7 +37,7 @@ function runInWorker(channels, sampleRate, onProgress) {
 export async function trimSilence(blob, onProgress) {
   let ctx;
   try {
-    ctx = new AudioContext();
+    ctx = new AudioContext({ sampleRate: 48000 }); // Opus bekerja di 48 kHz
     const decoded = await ctx.decodeAudioData(await blob.arrayBuffer());
     const nCh = Math.min(decoded.numberOfChannels, 2);
     // Salin supaya buffernya bisa dipindahkan (transfer) ke worker.
@@ -50,10 +50,10 @@ export async function trimSilence(blob, onProgress) {
     } catch {
       // Worker tak tersedia: jalan di thread utama (halaman bisa terasa berat).
       const copy = Array.from({ length: nCh }, (_, c) => decoded.getChannelData(c));
-      res = trimAndEncode(copy, sr, onProgress);
+      res = await trimAndEncode(copy, sr, onProgress);
     }
     if (res.silent) return { blob, silent: true };
-    return { blob: new Blob(res.chunks, { type: "audio/mpeg" }), silent: false };
+    return { blob: new Blob(res.chunks, { type: "audio/ogg" }), silent: false };
   } catch {
     return { blob, silent: false };
   } finally {

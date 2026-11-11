@@ -1,9 +1,9 @@
-import { trimAndEncode } from "./mp3core.js";
+import { trimAndEncode } from "./oggcore.js";
 
-self.onmessage = (e) => {
+self.onmessage = async (e) => {
   const { channels, sampleRate } = e.data;
   try {
-    const res = trimAndEncode(channels, sampleRate, (p) =>
+    const res = await trimAndEncode(channels, sampleRate, (p) =>
       self.postMessage({ type: "progress", p })
     );
     self.postMessage(

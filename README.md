@@ -4,7 +4,7 @@ Aplikasi React untuk **mendengarkan artikel Wikipedia**. Tempel tautan artikel,
 pilih suara, lalu aplikasi membacakan judul, subjudul, dan isinya memakai mesin
 suara bawaan browser (Web Speech API). Tidak ada server sendiri, Python, atau
 model eksternal; artikel diambil langsung dari API Wikipedia. Di Chrome dan Edge,
-hasil bacaan juga bisa **disimpan sebagai file MP3** lewat perekaman *system
+hasil bacaan juga bisa **disimpan sebagai file OGG** lewat perekaman *system
 audio* (`getDisplayMedia` + `MediaRecorder`).
 
 > ## Browser yang didukung
@@ -17,7 +17,7 @@ audio* (`getDisplayMedia` + `MediaRecorder`).
 > **Rekomendasi:** setelah beberapa kali percobaan, **Microsoft Edge versi desktop**
 > memberikan kualitas suara (TTS) terbaik dan juga mendukung merekam & menyimpan suara.
 >
-> | Browser | Suara yang ditampilkan | Simpan ke MP3 |
+> | Browser | Suara yang ditampilkan | Simpan ke OGG |
 > | --- | --- | --- |
 > | **Edge** | Suara neural `Microsoft … Online (Natural)` (bawaan, butuh internet) | Ya |
 > | **Chrome** | Suara jaringan `Google …` (butuh internet) | Ya |
@@ -28,7 +28,7 @@ audio* (`getDisplayMedia` + `MediaRecorder`).
 > disembunyikan. Jika browser tidak menyediakan suara yang bisa dipakai (setelah
 > menunggu ±4 detik), aplikasi menampilkan panduan.
 >
-> **Hanya Chrome/Edge desktop yang bisa menyimpan.** Menyimpan ke MP3 butuh
+> **Hanya Chrome/Edge desktop yang bisa menyimpan.** Menyimpan ke OGG butuh
 > perekaman system audio yang hanya tersedia di sana, jadi tombol **Bacakan &
 > Simpan** dinonaktifkan di Safari, Firefox, dan semua perangkat mobile; tombol
 > **Bacakan** tetap berfungsi.
@@ -54,8 +54,8 @@ audio* (`getDisplayMedia` + `MediaRecorder`).
   artikel bila tersedia.
 - Pengaturan **kecepatan** baca (0,5×–2×), serta tombol **Jeda/Lanjutkan** dan
   **Berhenti**.
-- **Bacakan & Simpan** (Chrome/Edge) menghasilkan file **MP3** (128 kbps) dengan
-  nama `Wikisiniar-Wikipedia-<bahasa>-<judul>-<platform>_<suara>.mp3`. Hening di awal dan
+- **Bacakan & Simpan** (Chrome/Edge) menghasilkan file **OGG** (Opus, 96 kbps) dengan
+  nama `Wikisiniar-Wikipedia-<bahasa>-<judul>-<platform>_<suara>.ogg`. Hening di awal dan
   akhir rekaman dipangkas otomatis.
 - **Dua bahasa antarmuka** (Indonesia / Inggris) lewat toggle di header. Default
   mengikuti bahasa browser; pilihan disimpan.
@@ -107,7 +107,7 @@ npm run preview   # mencoba hasil build secara lokal
    1. Pada dialog berbagi layar, pilih **Entire Screen** (bukan "Chrome Tab").
    2. Centang **"Also share system audio"**, lalu klik **Share**.
    3. Setelah artikel selesai dibacakan, rekaman berhenti otomatis, hening di
-      awal dan akhir dipangkas, lalu tombol **Unduh (mp3)** muncul.
+      awal dan akhir dipangkas, lalu tombol **Unduh (ogg)** muncul.
 
 ### Query URL (isi otomatis)
 
@@ -137,14 +137,14 @@ Konsekuensinya:
 - Kode tidak bisa memaksa pilihan pengguna di dialog berbagi
   (`systemAudio: "include"` hanya saran bagi browser).
 
-### Pemangkasan hening & konversi MP3
+### Pemangkasan hening & konversi OGG
 
 Suara online (Google/Edge Natural) butuh waktu jaringan sebelum berbunyi,
 sehingga awal rekaman cenderung hening. Perekaman tetap dimulai lebih dulu
 (agar huruf pertama tidak terpotong), lalu setelah selesai audio didekode,
 bagian hening di awal/akhir dipangkas (menyisakan 0,12 dtk sebelum dan 0,35 dtk
-sesudah suara), kemudian dikodekan ke MP3 di browser dengan
-[`@breezystack/lamejs`](https://www.npmjs.com/package/@breezystack/lamejs).
+sesudah suara), kemudian dikodekan ke OGG (Opus) di browser memakai WebCodecs `AudioEncoder`
+yang dibungkus wadah Ogg buatan sendiri, tanpa pustaka tambahan.
 Jika dekode/enkode gagal, file asli hasil `MediaRecorder` (`.webm`/`.m4a`)
 tetap tersedia.
 
@@ -177,7 +177,9 @@ wikisiniar/
     ├── support.js      # deteksi browser/perangkat & filter suara
     ├── wiki.js         # validasi URL Wikipedia, ambil & bersihkan artikel
     ├── samples.js      # teks contoh untuk preview suara
-    ├── audio.js        # pangkas hening + enkode MP3
+    ├── audio.js        # pangkas hening + enkode OGG (lewat Web Worker)
+    ├── oggcore.js      # enkoder Opus (WebCodecs) + pembungkus Ogg
+    ├── ogg.worker.js   # worker untuk enkode
     └── index.css       # styling responsif (terang/gelap)
 ```
 
@@ -187,5 +189,5 @@ wikisiniar/
 - Web Speech API (`speechSynthesis`) — suara bawaan browser
 - API Wikipedia (`action=query` & `action=parse`) — sumber artikel
 - Screen Capture API (`getDisplayMedia`) + `MediaRecorder` — penyimpanan audio
-- `@breezystack/lamejs` — enkoder MP3 di sisi browser
+- WebCodecs `AudioEncoder` (Opus) + pembungkus Ogg buatan sendiri — enkoder OGG di sisi browser
 - Tanpa backend sendiri

@@ -80,6 +80,10 @@ function pickMimeType() {
   return "";
 }
 
+const MANUAL_WAIT_MS = 10000; // batas menunggu suara Speech macOS mulai
+const MANUAL_END_SILENCE_MS = 6000; // hening selama ini = bacaan selesai (jeda antar-paragraf bisa panjang)
+const MANUAL_SOUND_LEVEL = 0.004; // ambang "ada suara"; suara pelan di ujung kalimat tetap dihitung
+
 const voiceKey = (v) => `${v.voiceURI}|${v.name}|${v.lang}`;
 
 /** Render **tebal** di dalam string terjemahan. */
@@ -596,9 +600,9 @@ export default function App() {
         }
         if (tickPeak > peak) peak = tickPeak;
         if (!manual) return;
-        // Mode Speech macOS: tunggu suara mulai (maks 5 dtk), berhenti otomatis saat suara berhenti
+        // Mode Speech macOS: tunggu suara mulai (maks 10 dtk), berhenti otomatis saat suara berhenti
         const now = Date.now();
-        if (tickPeak > 0.01) {
+        if (tickPeak > MANUAL_SOUND_LEVEL) {
           if (!heardAt) say("stManualHeard");
           heardAt = now;
         }

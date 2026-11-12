@@ -18,6 +18,7 @@ import {
 
 const ABBR = /(?:^|\s)(?:dr|drs|ir|prof|jl|no|hlm|dll|dsb|dst|tgl|st|mr|mrs|ms|vs|ca|sdr|bpk|ny|kab|kec|kel)\.$/i;
 const MIN_CHUNK = 70;
+const HEADING_MAX = 80; // baris satu kalimat sependek ini dianggap judul/subjudul
 const MAX_CHUNK = 220;
 
 /* Pecah per baris (judul/paragraf), lalu per kalimat tanpa memotong singkatan atau angka
@@ -25,6 +26,7 @@ const MAX_CHUNK = 220;
    dipecah di koma agar tidak terpotong oleh bug Chrome. */
 function splitChunks(text) {
   const out = [];
+  let carry = ""; // subjudul pendek: digabung ke paragraf berikutnya agar tidak ada jeda antar-utterance
   for (const line of text.split("\n")) {
     const raw = line.trim();
     if (!raw) continue;
@@ -33,6 +35,13 @@ function splitChunks(text) {
       const last = sentences.length - 1;
       if (last >= 0 && ABBR.test(sentences[last])) sentences[last] += " " + part;
       else sentences.push(part);
+    }
+    if (carry) {
+      sentences[0] = carry + " " + sentences[0];
+      carry = "";
+    } else if (sentences.length === 1 && sentences[0].length <= HEADING_MAX) {
+      carry = sentences[0];
+      continue;
     }
     let buf = "";
     const flush = () => {
@@ -59,6 +68,7 @@ function splitChunks(text) {
     }
     flush();
   }
+  if (carry) out.push(carry);
   return out;
 }
 
@@ -69,12 +79,6 @@ function pickMimeType() {
   }
   return "";
 }
-
-/** Suara "Multilingual" (mis. Edge "…Multilingual Online (Natural)") bisa membaca semua bahasa. */
-const isMultilingual = (v) => /multilingual/i.test(v.name);
-
-const MANUAL_WAIT_MS = 10000; // batas menunggu suara Speech macOS mulai
-const MANUAL_END_SILENCE_MS = 2500; // hening selama ini = bacaan selesai
 
 const voiceKey = (v) => `${v.voiceURI}|${v.name}|${v.lang}`;
 
@@ -392,14 +396,10 @@ export default function App() {
     () =>
       effectiveFilter === "all"
         ? voices
-        : voices.filter((v) => baseLang(v.lang) === effectiveFilter || isMultilingual(v)),
+        : voices.filter((v) => baseLang(v.lang) === effectiveFilter),
     [voices, effectiveFilter]
   );
 
-  // Suara multilingual dikunci ke bahasa suara yang dipilih (filter "Bahasa suara"),
-  // supaya tidak berpindah aksen saat bertemu kata serapan.
-  const speechLang = (v) =>
-    isMultilingual(v) && effectiveFilter !== "all" ? effectiveFilter : v.lang;
 
   const selectedVoice =
     filteredVoices.find((v) => voiceKey(v) === selectedKey) || filteredVoices[0];
@@ -433,7 +433,7 @@ export default function App() {
         const u = new SpeechSynthesisUtterance(s);
         if (selectedVoice) {
           u.voice = selectedVoice;
-          u.lang = speechLang(selectedVoice);
+          u.lang = selectedVoice.lang;
         }
         u.rate = rate;
         u.onerror = (e) => {
@@ -483,9 +483,9 @@ export default function App() {
       return;
     }
     setSpeaking(false);
-    const u = new SpeechSynthesisUtterance(sampleFor(speechLang(selectedVoice)));
+    const u = new SpeechSynthesisUtterance(sampleFor(selectedVoice.lang));
     u.voice = selectedVoice;
-    u.lang = speechLang(selectedVoice);
+    u.lang = selectedVoice.lang;
     u.rate = rate;
     const done = () => {
       if (previewIdRef.current === id) setPreviewing(false);
